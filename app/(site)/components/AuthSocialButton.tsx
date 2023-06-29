@@ -9,7 +9,7 @@ interface AuthSocialButtonProps {
 
 const AuthSocialButton: React.FC<AuthSocialButtonProps> = ({
     icon: Icon,
-    onClick
+    onClick,
 }) => {
     return (  
         <button
@@ -32,8 +32,9 @@ const AuthSocialButton: React.FC<AuthSocialButtonProps> = ({
                 focus:outline-offset-0
             "
         >
-            
+          <Icon /> 
         </button>
+    )
 }
  
 export default AuthSocialButton;
