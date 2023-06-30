@@ -2,26 +2,35 @@
 
 import Button from '@/app/components/Button';
 import  Input  from '@/app/components/inputs/Input';
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import AuthSocialButton from './AuthSocialButton';
 import { BsGithub, BsGoogle } from 'react-icons/bs'
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { signIn } from 'next-auth/react';
-import { callbackify } from 'util';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
 const AuthForm = () => {
+    const session = useSession();
+    const router = useRouter();
     const [variant, setVariant] = useState<Variant>('REGISTER');
     const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+        if(session?.status === 'authenticated'){
+            //console.log('Authenticated')
+            router.push('/users');
+        }
+    } , [session?.status , router]);
+    
     const toggleVariant = useCallback(() => {
         if (variant === 'LOGIN') {
             setVariant('REGISTER');
         }
-        else{
+        else{ 
             setVariant('LOGIN');
         }
     } , [variant]);
@@ -64,6 +73,7 @@ const AuthForm = () => {
 
                 if(callback?.ok && !callback?.error) {
                     toast.success('Logged In');
+                    router.push('/users');
                 }
             })
             .finally(() => setIsLoading(false));
@@ -89,7 +99,7 @@ const AuthForm = () => {
 
     return (
 
-        <div
+        <div 
             className="
                 mt-8
                 sm:mx-auto
